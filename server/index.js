@@ -1,8 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-console.log("ENV KEY:", process.env.OPENAI_API_KEY);
-
 import express from "express";
 import cors from "cors";
 import aiRoutes from "./routes/ai.js";

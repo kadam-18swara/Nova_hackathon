@@ -4,12 +4,18 @@ import OpenAI from "openai";
 const router = express.Router();
 
 router.get("/test", (req, res) => {
-  res.send("AI route working");
+  const hasKey = !!process.env.OPENAI_API_KEY;
+  res.json({ 
+    message: "AI route working",
+    hasApiKey: hasKey,
+    keyLength: process.env.OPENAI_API_KEY?.length || 0
+  });
 });
 
 router.post("/generate-content", async (req, res) => {
   try {
     console.log("POST route hit");
+    console.log("Request body:", req.body);
 
     // Create OpenAI instance HERE (not at top)
     const openai = new OpenAI({
@@ -27,6 +33,7 @@ router.post("/generate-content", async (req, res) => {
     Goals: ${goals}
     `;
 
+    console.log("Calling OpenAI...");
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -35,13 +42,19 @@ router.post("/generate-content", async (req, res) => {
       ],
     });
 
+    console.log("OpenAI response received");
     res.json({
       content: response.choices[0].message.content,
     });
 
   } catch (error) {
     console.error("FULL ERROR:", error);
-    res.status(500).json({ error: error.message });
+    console.error("Error message:", error.message);
+    console.error("Error status:", error.status);
+    res.status(500).json({ 
+      error: error.message,
+      details: error.response?.data || "No additional details"
+    });
   }
 });
 

@@ -1,8 +1,10 @@
 function CalendarView({ content }) {
   return (
-    <div>
-      <h2>Generated Content Calendar</h2>
-      <pre>{content}</pre>
+    <div className="calendar-card">
+      <h2>📅 Generated Marketing Content</h2>
+      <div className="content-display">
+        {content}
+      </div>
     </div>
   );
 }
